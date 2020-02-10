@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sample Web Page</title>
+    <meta charset="utf-8">
+    <script src = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+    <style type="text/css">
+
+        .my_highlight {
+            background-color: yellow;
+            color: red;
+            font-weight: bold;
+        }
+
+        .btn-size {
+            width: 200px;
+            height: 150px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+	<h1> Instructions </h1>
+    <ul>
+        <li>Please read the story and then input the characters from the story with a description.</li>
+        <li>Please write <span class="my_highlight">at least 10 words</span> for each description.</li>
+        <li>Click the add button to add more characters. 
+    </ul>
+
+
+    <!-- Image & Input Text Block -->
+    <form id="mturk_form" name="mturk_form">
+        <div>
+            <h3>Story 1</h3>
+            <body>nijfnvkvjenvkjerngkrtjnkvensjkrgnvesnbkjnevkjv rgjerng krengkerj werngken kjet nbjkrtnbjrtnbk rtkbtkr bktr nbkjrt bjkrkjt nbktn krebktjre bjkbkrenbk trbktjrbtkre bktrenbtnrbkjt kjr bkjtr nbjktr ebr ebkjtn kebnktrnbkrjntbker btkr bnkr brtb ktrebkrrbkrtjbkrnbjkrbtkr ejenbktnr bkjrtn bjtnrbkjnrtkjbnt ebtkrnbkjrnebjktrn bktjrn bjk re nbktrnkrbnr</body>
+            
+            <body>
+                <p>Click the button and each will perform some dynamic function!</p>
+                <div id="main">
+                    <input type="button" id="btAdd" value="Add Element" class="bt" />
+                    <input type="button" id="btRemove" value="Remove Element" class="bt" />
+                    <input type="button" id="btRemoveAll" value="Remove All" class="bt" /><br />
+                </div>
+            </body>
+            <!-- https://www.encodedna.com/2013/07/dynamically-add-remove-textbox-control-using-jquery.htm -->
+            <Textbox rows="2" cols="10"name="character1" required></Textbox>
+            <textarea rows="10" cols="125" name="sentence1" required></textarea>
+        </div>
+
+        <input type="submit" class="btn-size">
+    </form>
+
+</body>
+
+<script>
+    $(document).ready(function() {
+
+        var iCnt = 0;
+        // CREATE A "DIV" ELEMENT AND DESIGN IT USING jQuery ".css()" CLASS.
+        var container = $(document.createElement('div')).css({
+            padding: '5px', margin: '20px', width: '200px', height: '200px',borderTopColor: '#999', borderBottomColor: '#999',
+            borderLeftColor: '#999', borderRightColor: '#999'
+        });
+
+        $('#btAdd').click(function() {
+            if (iCnt <= 19) {
+
+                iCnt = iCnt + 1;
+
+                // ADD TEXTBOX.
+                $(container).append('<input width="200px" height="200px" type=text class="input" id=tb' + iCnt + ' ' +
+                    'value="Character ' + iCnt + '" />');
+                $(container).append('<input rows="10" cols="200" type=textarea class="input" id=ta' + iCnt + ' ' +  
+                    'value="Character Description ' + iCnt + '" />');
+
+
+                // SHOW SUBMIT BUTTON IF ATLEAST "1" ELEMENT HAS BEEN CREATED.
+                if (iCnt == 1) {
+                    var divSubmit = $(document.createElement('div'));
+                    $(divSubmit).append('<input type=button class="bt"' + 
+                        'onclick="GetTextValue()"' + 
+                            'id=btSubmit value=Submit />');
+                }
+
+                // ADD BOTH THE DIV ELEMENTS TO THE "main" CONTAINER.
+                $('#main').after(container, divSubmit);
+            }
+            // AFTER REACHING THE SPECIFIED LIMIT, DISABLE THE "ADD" BUTTON.
+            // (20 IS THE LIMIT WE HAVE SET)
+            else {      
+                $(container).append('<label>Reached the limit</label>'); 
+                $('#btAdd').attr('class', 'bt-disable'); 
+                $('#btAdd').attr('disabled', 'disabled');
+            }
+        });
+
+        // REMOVE ONE ELEMENT PER CLICK.
+        $('#btRemove').click(function() {
+            if (iCnt != 0) { $('#tb' + iCnt).remove(); 
+                             $('#ta' +iCnt).remove(); 
+                             iCnt = iCnt - 1;}
+        
+            if (iCnt == 0) { 
+                $(container)
+                    .empty() 
+                    .remove(); 
+
+                $('#btSubmit').remove(); 
+                $('#btAdd')
+                    .removeAttr('disabled') 
+                    .attr('class', 'bt');
+            }
+        });
+
+        // REMOVE ALL THE ELEMENTS IN THE CONTAINER.
+        $('#btRemoveAll').click(function() {
+            $(container)
+                .empty()
+                .remove(); 
+
+            $('#btSubmit').remove(); 
+            iCnt = 0; 
+            
+            $('#btAdd')
+                .removeAttr('disabled') 
+                .attr('class', 'bt');
+        });
+    });
+    // PICK THE VALUES FROM EACH TEXTBOX WHEN "SUBMIT" BUTTON IS CLICKED.
+    var divValue, values = '';
+
+    function GetTextValue() {
+        $(divValue) 
+            .empty() 
+            .remove(); 
+        
+        values = '';
+
+        $('.input').each(function() {
+            divValue = $(document.createElement('div')).css({
+                padding:'200px', width:'200px', height:'500px'
+            });
+            values += this.value + '<br />'
+        });
+
+        $(divValue).append('<p><b>Your selected values</b></p>' + values);
+        $('body').append(divValue);
+    }
+</script>
+
+
+</html>
